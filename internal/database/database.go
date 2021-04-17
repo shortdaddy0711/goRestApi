@@ -1,8 +1,45 @@
 package database
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+
+	"github.com/joho/godotenv"
+)
+
+func goDotEnvVariable(key string) string {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Failed to load env file")
+	}
+
+	return os.Getenv(key)
+}
 
 func NewDatabase() (*gorm.DB, error) {
 	fmt.Println("Setting up new database connection")
-	return nil, nil
+
+	dbUsername := goDotEnvVariable("DB_USERNAME")
+	dbPassword := goDotEnvVariable("DB_PASSWORD")
+	dbHost := goDotEnvVariable("DB_HOST")
+	dbTable := goDotEnvVariable("DB_TABLE")
+	dbPort := goDotEnvVariable("DB_PORT")
+
+	connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUsername, dbTable, dbPassword)
+
+	db, err := gorm.Open("postgres", connectString)
+	if err != nil {
+		return db, err
+	}
+
+	if err := db.DB().Ping(); err != nil {
+		return db, err
+	}
+
+	return db, nil
 }
