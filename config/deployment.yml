@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,17 +20,19 @@ spec:
 			containers:
 			- name: application
 				image: "shortdaddy0711/comments-rest-api:latest"
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 8080
+				imagePullPolicy: Always
+				ports:
+					- containerPort: 8080
 				env:
-          - name: DB_PORT
-            value: "$DB_PORT"
-          - name: DB_HOST
-            value: "$DB_HOST"
-          - name: DB_PASSWORD
-            value: "$DB_PASSWORD"
-          - name: DB_TABLE
-            value: "$DB_TABLE"
-          - name: DB_USERNAME
-            value: "$DB_USERNAME"
+					- name: DB_PORT
+						value: "$DB_PORT"
+					- name: DB_HOST
+						value: "$DB_HOST"
+					- name: DB_PASSWORD
+						value: "$DB_PASSWORD"
+					- name: DB_TABLE
+						value: "$DB_TABLE"
+					- name: DB_USERNAME
+						value: "$DB_USERNAME"
+					- name: SSL_MODE
+						value: "require"

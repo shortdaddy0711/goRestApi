@@ -2,27 +2,27 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
 )
 
 func goDotEnvVariable(key string) string {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Fatalf("Failed to load env file")
+		log.Fatal("Failed to load env file")
 	}
 
 	return os.Getenv(key)
 }
 
 func NewDatabase() (*gorm.DB, error) {
-	fmt.Println("Setting up new database connection")
+	log.Info("Setting up new database connection")
 
 	dbUsername := goDotEnvVariable("DB_USERNAME")
 	dbPassword := goDotEnvVariable("DB_PASSWORD")

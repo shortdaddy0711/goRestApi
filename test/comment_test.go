@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/go-resty/resty/v2"
@@ -21,10 +20,8 @@ func TestGetComment(t *testing.T) {
 func TestPostComment(t *testing.T) {
 	client := resty.New()
 	resp, err := client.R().
-	SetBody(`{"slug": "/", "author": "namsoo", "body": "hello world"}`).Post(BASE_URL + "/api/comment")
+		SetBody(`{"slug": "/", "author": "namsoo", "body": "hello world"}`).Post(BASE_URL + "/api/comment")
 
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode())
-	fmt.Println(resp.Result())
 }
-
