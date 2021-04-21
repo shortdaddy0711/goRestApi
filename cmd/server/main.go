@@ -7,12 +7,21 @@ import (
 	"github.com/shortdaddy0711/go-rest-api/internal/comment"
 	"github.com/shortdaddy0711/go-rest-api/internal/database"
 	transportHTTP "github.com/shortdaddy0711/go-rest-api/internal/transport/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
-type App struct {}
+type App struct {
+	Name    string
+	Version string
+}
 
 func (app *App) Run() error {
-	fmt.Println("Setting Up Our App")
+	log.SetFormatter(&log.JSONFormatter{})
+	log.WithFields(log.Fields{
+		"AppName":    app.Name,
+		"AppVersion": app.Version,
+	}).Info("Setting up application")
 
 	var err error
 	db, err := database.NewDatabase()
@@ -30,18 +39,22 @@ func (app *App) Run() error {
 	handler.SetupRoutes()
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
-		fmt.Println("Failed to setup server")
+		log.Error("Failed to setup server")
 		return err
 	}
 
+	log.Info("Now API up and running")
 	return nil
 }
 
 func main() {
 	fmt.Println("Go REST API")
-	app := App{}
+	app := App{
+		Name:    "Comment REST API",
+		Version: "1.0.0",
+	}
 	if err := app.Run(); err != nil {
-		fmt.Println("Error starting up our REST API")
-		fmt.Println(err)
+		log.Error(err)
+		log.Fatal("Error starting up our REST API")
 	}
 }

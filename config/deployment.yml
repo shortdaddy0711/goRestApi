@@ -24,3 +24,14 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 8080
+				env:
+          - name: DB_PORT
+            value: "$DB_PORT"
+          - name: DB_HOST
+            value: "$DB_HOST"
+          - name: DB_PASSWORD
+            value: "$DB_PASSWORD"
+          - name: DB_TABLE
+            value: "$DB_TABLE"
+          - name: DB_USERNAME
+            value: "$DB_USERNAME"

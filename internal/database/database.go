@@ -29,8 +29,9 @@ func NewDatabase() (*gorm.DB, error) {
 	dbHost := goDotEnvVariable("DB_HOST")
 	dbTable := goDotEnvVariable("DB_TABLE")
 	dbPort := goDotEnvVariable("DB_PORT")
+	sslmode := goDotEnvVariable("SSL_MODE")
 
-	connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUsername, dbTable, dbPassword)
+	connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", dbHost, dbPort, dbUsername, dbTable, dbPassword, sslmode)
 
 	db, err := gorm.Open("postgres", connectString)
 	if err != nil {
