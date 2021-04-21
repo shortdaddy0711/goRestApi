@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/go-resty/resty/v2"
@@ -24,5 +25,6 @@ func TestPostComment(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode())
+	fmt.Println(resp.Result())
 }
 
