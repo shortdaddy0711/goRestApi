@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -35,6 +36,19 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func BasicAuth(callback func(w http.ResponseWriter, r *http.Request)) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Info("Basic Auth Endpoint hit")
+		user, pw, ok := r.BasicAuth()
+		if user == "admin" && pw == "admin" && ok {
+			callback(w, r)
+		} else {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			sendErrorResponse(w, "You are not authorized", errors.New("authorization failed"))
+		}
+	}
+}
+
 func (h *Handler) SetupRoutes() {
 	log.Info("Setting Up Routes")
 	h.Router = mux.NewRouter()
@@ -42,9 +56,9 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Use(LoggingMiddleware)
 
 	h.Router.HandleFunc("/api/comment/{id}", h.GetComment).Methods("GET")
-	h.Router.HandleFunc("/api/comment/{id}", h.DeleteComment).Methods("DELETE")
-	h.Router.HandleFunc("/api/comment/{id}", h.UpdateComment).Methods("PUT")
-	h.Router.HandleFunc("/api/comment", h.PostComment).Methods("POST")
+	h.Router.HandleFunc("/api/comment/{id}", BasicAuth(h.DeleteComment)).Methods("DELETE")
+	h.Router.HandleFunc("/api/comment/{id}", BasicAuth(h.UpdateComment)).Methods("PUT")
+	h.Router.HandleFunc("/api/comment", BasicAuth(h.PostComment)).Methods("POST")
 	h.Router.HandleFunc("/api/comment", h.GetAllComments).Methods("GET")
 
 	h.Router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
