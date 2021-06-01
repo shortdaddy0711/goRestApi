@@ -71,20 +71,20 @@ func JWTAuth(callback func(w http.ResponseWriter, r *http.Request)) func(http.Re
 		log.Info("JWT Auth Endpoint hit")
 		authHeader := r.Header["Authorization"]
 		if authHeader == nil {
-			sendErrorResponse(w, "You are not authorized", errors.New("authorization failed"))
+			sendErrorResponse(w, "You are not authorized for this", errors.New("authorization failed"))
 			return
 		}
 
 		authHeaderParts := strings.Split(authHeader[0], " ")
 		if len(authHeaderParts) != 2 || strings.ToLower(authHeaderParts[0]) != "bearer" {
-			sendErrorResponse(w, "You are not authorized", errors.New("authorization failed"))
+			sendErrorResponse(w, "You are not authorized for this", errors.New("authorization failed"))
 			return
 		}
 
 		if validateToken(authHeaderParts[1]) {
 			callback(w, r)
 		} else {
-			sendErrorResponse(w, "You are not authorized", errors.New("authorization failed"))
+			sendErrorResponse(w, "You are not authorized for this", errors.New("authorization failed"))
 			return
 		}
 	}
