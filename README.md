@@ -1,6 +1,12 @@
-# Instruction
+# Go REST API
 
-### Run this command in the root folder
+
+## Description
+* REST API for commenting server
+
+
+## Instruction
+* Run this command in the root folder
 ```
 $ docker-compose up
 ```
